@@ -1,11 +1,10 @@
 import "./App.css";
+import Body from "./Components/Body";
 
 function App() {
-  return (
-    <div>
-      <h1  className="font-bold ">hello</h1>
-    </div>
-  );
+  return <div>
+    <Body/>
+  </div>;
 }
 
 export default App;
