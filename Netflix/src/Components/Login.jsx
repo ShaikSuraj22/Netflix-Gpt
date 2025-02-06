@@ -9,6 +9,7 @@ import {
 import { auth } from "../Utils/firebase";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { BG } from "../Utils/constants";
 
 const Login = () => {
   const [isSignInForm, setSignInForm] = useState(true);
@@ -16,10 +17,11 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   // Validations
+  // GETTING DATA FROM THE INPUT BOXES
   const email = useRef(null);
   const password = useRef(null);
   const name = useRef(null);
-
+  // ON CLICK BUTTON AFTER SUBMISSION OF DATA
   const handleClickButton = () => {
     // check validation here
     const message = isValidData(
@@ -52,7 +54,7 @@ const Login = () => {
               dispatch(
                 addUser({ uid: uid, email: email, displayname: displayname })
               );
-              navigate("/browser");
+              navigate("/browse");
 
               // ...
             })
@@ -80,7 +82,7 @@ const Login = () => {
           // Signed in
           const user = userCredential.user;
           console.log(user);
-          navigate("/browser");
+          navigate("/browse");
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -100,7 +102,7 @@ const Login = () => {
       {/* Background Image */}
       <div className="absolute inset-0">
         <img
-          src="https://assets.nflxext.com/ffe/siteui/vlv3/fb5cb900-0cb6-4728-beb5-579b9af98fdd/web/IN-en-20250127-TRIFECTA-perspective_cf66f5a3-d894-4185-9106-5f45502fc387_large.jpg"
+          src={BG}
           alt="Background"
           className="w-full h-full object-cover"
         />
@@ -160,7 +162,7 @@ const Login = () => {
           <button
             onClick={handleClickButton}
             type="submit"
-            className="mt-6 w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded font-bold"
+            className="mt-6 w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded font-bold cursor-pointer"
           >
             {isSignInForm ? " Sign In" : "Sign Up"}
           </button>
