@@ -16,11 +16,13 @@ const Login = () => {
   const [erroMessage, seterrorMessage] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  
   // Validations
   // GETTING DATA FROM THE INPUT BOXES
   const email = useRef(null);
   const password = useRef(null);
   const name = useRef(null);
+
   // ON CLICK BUTTON AFTER SUBMISSION OF DATA
   const handleClickButton = () => {
     // check validation here
@@ -91,9 +93,11 @@ const Login = () => {
         });
     }
   };
+
   const togglehandle = () => {
     setSignInForm(!isSignInForm);
   };
+
   return (
     <div className="relative w-screen h-screen">
       {/* Header */}

@@ -7,7 +7,7 @@ const VideoBackground = ({ movieid }) => {
   // HERE USING DISPATCH TO DISPATCH THE TRAILER KEY TO THE STORE;
   const dispatch = useDispatch();
   // WE USE USESELECTOR TO GET THE KEY FROM THE STORE( HERE TRAILERKEY IS NAME WHICH WE GIVEN IN THE MOVIESLICE)
-  const trailervideo = useSelector((store) => store.movies?.TrailerKey);
+  const trailerVideoKey = useSelector((store) => store.movies?.TrailerKey);
   // HERE WE USE USESTATE TO GET TRAILERKEY BECAUSE WE CANT ACCESS IT DIRECTLY
   // instead of using use state we use the REDUX STORE HERE TO SIMPLY IT, THEN WE CAN ACCESS IT FROM REDUX STORE
   // const [trailerid, setTrailerid] = useState(null);
@@ -41,7 +41,7 @@ const VideoBackground = ({ movieid }) => {
       {/* Background Video */}
       <iframe
         className="absolute top-0 left-0 w-full h-full object-cover pointer-events-none"
-        src={`https://www.youtube.com/embed/${trailervideo}?autoplay=1&mute=1&loop=1&playlist=${trailervideo}&controls=0&showinfo=0&modestbranding=1`}
+        src={`https://www.youtube.com/embed/${trailerVideoKey}?autoplay=1&mute=1&loop=1&playlist=${trailerVideoKey}&controls=0&showinfo=0&modestbranding=1`}
         title="Netflix Background Trailer"
         frameBorder="0"
         allow="autoplay; encrypted-media"

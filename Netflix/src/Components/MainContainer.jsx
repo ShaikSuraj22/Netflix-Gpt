@@ -7,12 +7,12 @@ const MainContainer = () => {
   // NOW WE ARE USING THE API STORED DATA WHICH IS STORE IN NOWPLAYINGMOVIES(THAT IS THE REASON WE ARE USING THE REDUX IN THIS APPLICATION ITS LIKE CENTRALIZED STORAGE SYSTEM)
   const movies = useSelector((store) => store.movies?.nowPlayingMovies);
   if (movies === null) return;
-  const mainMovie = movies[10];
+  const mainMovie = movies[9];
 //   console.log(mainMovie);
   const { title, overview ,id} = mainMovie;
 
   return (
-    <div className="w-full h-[650px] border border-black">
+    <div className="w-full  border border-black">
       <VideoTitle title={title} overview={overview} />
       <VideoBackground movieid={id} />
     </div>
