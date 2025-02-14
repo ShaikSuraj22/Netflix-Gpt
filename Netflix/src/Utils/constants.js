@@ -29,4 +29,5 @@ export const SUPPORTED_LANGUAGES = [
   },
 ];
 
-export const OPENAI_KEY = " sk-b996447c9ed14656b501b9292c4f50d7 ";
+export const OPENAI_KEY =
+  "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";

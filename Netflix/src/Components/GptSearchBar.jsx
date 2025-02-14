@@ -1,31 +1,94 @@
 import React, { useRef } from "react";
-import { BG, SUPPORTED_LANGUAGES } from "../Utils/constants";
+import {
+  API_OPTIONS,
+  BG,
+  OPENAI_KEY,
+  SUPPORTED_LANGUAGES,
+} from "../Utils/constants"; // Import API Key
 import language from "../Utils/langConstants";
 import { useDispatch, useSelector } from "react-redux";
 import { changeLanguage } from "../Utils/configSlice";
-import client from "../Utils/openai";
+import { addGptMovieResult } from "../Utils/gptSlice";
 
 const GptSearchBar = () => {
   const dispatch = useDispatch();
   const handleLanguageChange = (e) => {
     dispatch(changeLanguage(e.target.value));
   };
+
   const langkey = useSelector((store) => store.config.lang);
   // WE ARE USING IT FOR TO STORE THE INPUT TEXT INTO THE SEARCHTEXT VARIBALE, WITHOUT USING ANY E.TARGET.VALUE
   const searchText = useRef(null);
 
+  // SEARCH MOVIE IN TMDBAPI
+  const searchMovieTmdb = async (movie) => {
+    const data = await fetch(
+      "https://api.themoviedb.org/3/search/movie?query=" +
+        movie +
+        "&include_adult=false&language=en-US&page=1",
+      API_OPTIONS
+    );
+    const json = await data.json();
+    return json.results;
+  };
+
   const handleGptSearchText = async () => {
-    console.log(searchText.current.value);
-    // HERE WERE CALLING THE API- OF OPENAI
-    const gptQuery =
-      "Act as a Movie Recommendation System and suggest some movies for the Query" +
-      searchText.current.value +
-      " only give top 5 movies, comma seperated like the example result given ahead. Example result: GunturKaaram, RRR, Animal, Seetharamam, Lucky Bhaskar";
-    const gptResults = await client.chat.completions.create({
-      messages: [{ role: "user", content: gptQuery }],
-      model: "gpt-4o",
-    });
-    console.log(gptResults.choices);
+    const query = searchText.current.value.trim();
+    if (!query) return;
+
+    console.log("User Query:", query);
+
+    const gptQuery = `Act as a Movie Recommendation System and suggest some movies for the Query: ${query}. Only give the top 5 movies, comma-separated. Example result: GunturKaaram, RRR, Animal, Seetharamam, Lucky Bhaskar`;
+
+    try {
+      const response = await fetch(
+        "https://openrouter.ai/api/v1/chat/completions",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${OPENAI_KEY}`, // Use the stored API key
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            model: "qwen/qwen2.5-vl-72b-instruct:free",
+            messages: [
+              { role: "user", content: [{ type: "text", text: gptQuery }] },
+            ],
+          }),
+        }
+      );
+
+      if (!response.ok) throw new Error(`API Error: ${response.statusText}`);
+
+      const data = await response.json();
+      console.log("GPT Results:", data);
+      const searchResults = data?.choices?.[0]?.message?.content?.split(",");
+      //  ['The Hangover', ' Bridesmaids', ' Superbad', ' Step Brothers', ' Anchorman']
+      // IT HAVE THIS DATA IN ABOVE FORMAT
+      console.log(searchResults);
+      // TRAVELLING IN THE ARRAY AND GETTING 5 MOVIES DATA THROUGH THE API
+      const promiseArray = searchResults.map((movie) => searchMovieTmdb(movie));
+      // here it will return the array of promises not the results
+      // [promise,promise,promise,promise,promise,] promise will take some time to get result, so it will return the promise not the result intially
+      const tmdbResults = await Promise.all(promiseArray);
+      // here we are converting the all promises into the result by promise.all() function
+      console.log(tmdbResults);
+
+      // pushing data into the redux store
+      dispatch(
+        addGptMovieResult({
+          movieNames: searchResults,
+          movieResults: tmdbResults,
+        })
+      );
+
+      // Extract and display movie recommendations
+      if (data.choices && data.choices.length > 0) {
+        alert(`Recommended Movies: ${data.choices[0].message.content}`);
+      }
+    } catch (error) {
+      console.error("Error fetching GPT results:", error);
+    }
   };
 
   return (
