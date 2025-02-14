@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useRef } from "react";
 import { BG, SUPPORTED_LANGUAGES } from "../Utils/constants";
 import language from "../Utils/langConstants";
 import { useDispatch, useSelector } from "react-redux";
 import { changeLanguage } from "../Utils/configSlice";
+import client from "../Utils/openai";
 
 const GptSearchBar = () => {
   const dispatch = useDispatch();
@@ -10,6 +11,22 @@ const GptSearchBar = () => {
     dispatch(changeLanguage(e.target.value));
   };
   const langkey = useSelector((store) => store.config.lang);
+  // WE ARE USING IT FOR TO STORE THE INPUT TEXT INTO THE SEARCHTEXT VARIBALE, WITHOUT USING ANY E.TARGET.VALUE
+  const searchText = useRef(null);
+
+  const handleGptSearchText = async () => {
+    console.log(searchText.current.value);
+    // HERE WERE CALLING THE API- OF OPENAI
+    const gptQuery =
+      "Act as a Movie Recommendation System and suggest some movies for the Query" +
+      searchText.current.value +
+      " only give top 5 movies, comma seperated like the example result given ahead. Example result: GunturKaaram, RRR, Animal, Seetharamam, Lucky Bhaskar";
+    const gptResults = await client.chat.completions.create({
+      messages: [{ role: "user", content: gptQuery }],
+      model: "gpt-4o",
+    });
+    console.log(gptResults.choices);
+  };
 
   return (
     <div
@@ -37,11 +54,13 @@ const GptSearchBar = () => {
       >
         <div className="flex items-center bg-white shadow-lg rounded-full overflow-hidden p-2">
           <input
+            ref={searchText}
             type="text"
             placeholder={language[langkey].gptPlaceholder}
             className="flex-1 px-4 py-2 text-gray-700 outline-none"
           />
           <button
+            onClick={handleGptSearchText}
             type="submit"
             className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-full transition-all"
           >
