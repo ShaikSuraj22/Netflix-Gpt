@@ -5,6 +5,9 @@ const movieSlice = createSlice({
   initialState: {
     // FINALLY THE API DATA MOVIES STORED HERE IN NOWMOVIES PLAYING
     nowPlayingMovies: null,
+    popularMovies: null,
+    topRatedMovies: null,
+    upComingMovies: null,
     TrailerKey: null,
   },
   reducers: {
