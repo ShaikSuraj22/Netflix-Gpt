@@ -9,6 +9,7 @@ const movieSlice = createSlice({
     topRatedMovies: null,
     upComingMovies: null,
     TrailerKey: null,
+    TrailerKey2: null,
   },
   reducers: {
     // IT IS LIKE A FUNCTION, WE ARE USING IT TO ADD THE DATA INTO THE  ABOVE(NOWPLAYINGMOVIES);
@@ -27,12 +28,16 @@ const movieSlice = createSlice({
     addTrailer: (state, action) => {
       state.TrailerKey = action.payload;
     },
+    addTrailer2: (state, action) => {
+      state.TrailerKey2 = action.payload;
+    },
   },
 });
 
 export const {
   addNowPlayingMovies,
   addTrailer,
+  addTrailer2,
   addPopularMovies,
   addTopRatedMovies,
   addUpComingMovies,

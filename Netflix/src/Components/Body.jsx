@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import Login from "./Login";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Browse from "./Browse";
+import TrailerDetails from "./TrailerDetails";
 const Body = () => {
   const approuter = createBrowserRouter([
     {
@@ -12,6 +13,10 @@ const Body = () => {
       path: "/browse",
       element: <Browse />,
     },
+    {
+      path: "/watch/:movieId",
+      element: <TrailerDetails/>
+    }
   ]);
 
   return (
