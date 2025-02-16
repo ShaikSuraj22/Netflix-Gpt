@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { addTrailer2 } from "../Utils/movieSlice";
-import { API_OPTIONS } from "../Utils/constants";
+import { API_OPTIONS, NETFILX_LOGO } from "../Utils/constants";
+import useRecommendations from "../Hooks/useRecommendations";
+import MovieList from "./MovieList";
 
 const TrailerDetails = () => {
   // here we getting the movie id from the url, and storing in {movieId}
@@ -46,20 +48,34 @@ const TrailerDetails = () => {
   useEffect(() => {
     getMovieTrailer();
   }, [movieId, dispatch]);
+  // HERE WE CALLING THE USERECOMMENDATION HOOK
+  useRecommendations();
+  // here we getting the data of movies slice and gettting data of recommendation
+  const movies = useSelector((store) => store.movies);
 
   return (
-    <div className="flex justify-center items-center h-screen bg-black text-white">
-      {trailerKey ? (
-        <iframe
-          className="w-[80%] h-[60%] md:w-[60%] md:h-[50%] rounded-lg shadow-lg"
-          src={`https://www.youtube.com/embed/${trailerKey}`}
-          title="Movie Trailer"
-          allowFullScreen
-        ></iframe>
-      ) : (
-        <p className="text-lg">No Trailer Available</p>
-      )}
-    </div>
+    <>
+      <div className="absolute top-0 left-0 w-full px-8 py-4 bg-gradient-to-b from-black z-10 flex justify-between">
+        <Link to={"/browse"}>
+          <img className="w-44" src={NETFILX_LOGO} alt="Netflix Logo" />
+        </Link>
+      </div>
+      <div className="flex justify-center items-center h-screen bg-black text-white">
+        {trailerKey ? (
+          <iframe
+            className="w-[80%] h-[60%] md:w-[60%] md:h-[50%] rounded-lg shadow-lg"
+            src={`https://www.youtube.com/embed/${trailerKey}`}
+            title="Movie Trailer"
+            allowFullScreen
+          ></iframe>
+        ) : (
+          <p className="text-lg">No Trailer Available</p>
+        )}
+      </div>
+      <div className="bg-black">
+        <MovieList title={"Recommendations"} movies={movies?.recommendation} />
+      </div>
+    </>
   );
 };
 
