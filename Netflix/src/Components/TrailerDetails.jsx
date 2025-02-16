@@ -5,6 +5,8 @@ import { addTrailer2 } from "../Utils/movieSlice";
 import { API_OPTIONS, NETFILX_LOGO } from "../Utils/constants";
 import useRecommendations from "../Hooks/useRecommendations";
 import MovieList from "./MovieList";
+import useReviews from "../Hooks/useReviews";
+import Reviews from "./Reviews";
 
 const TrailerDetails = () => {
   // here we getting the movie id from the url, and storing in {movieId}
@@ -48,8 +50,12 @@ const TrailerDetails = () => {
   useEffect(() => {
     getMovieTrailer();
   }, [movieId, dispatch]);
+  
   // HERE WE CALLING THE USERECOMMENDATION HOOK
   useRecommendations();
+
+  // HERE WE CALLING THE USEREVIEW HOOK FOR REVIEWS
+  useReviews();
   // here we getting the data of movies slice and gettting data of recommendation
   const movies = useSelector((store) => store.movies);
 
@@ -74,6 +80,9 @@ const TrailerDetails = () => {
       </div>
       <div className="bg-black">
         <MovieList title={"Recommendations"} movies={movies?.recommendation} />
+      </div>
+      <div>
+        <Reviews />
       </div>
     </>
   );

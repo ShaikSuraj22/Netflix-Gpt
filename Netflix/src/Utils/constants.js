@@ -28,4 +28,4 @@ export const SUPPORTED_LANGUAGES = [
   },
 ];
 
-export const OPENAI_KEY = "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"
+export const OPENAI_KEY = "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"
